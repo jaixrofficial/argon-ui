@@ -371,7 +371,7 @@ const ServerConsolePage = () => {
             <div className={`flex items-center ${getStateColor(server?.state || '')}`}>
               <div className={`w-2 h-2 rounded-full mr-2 ${
                 server?.state?.toLowerCase() === 'running' ? 'bg-green-500' :
-                server?.state?.toLowerCase() === 'exited' ? 'bg-red-500' :
+                server?.state?.toLowerCase() === 'stopped' ? 'bg-red-500' :
                 server?.state?.toLowerCase() === 'installed' ? 'bg-gray-500' :
                 'bg-yellow-500'
               }`} />
