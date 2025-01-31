@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRightIcon, PlusIcon, TrashIcon, PencilIcon, ArrowLeftIcon } from 'lucide-react';
+import { ChevronRightIcon, TrashIcon, PencilIcon, ArrowLeftIcon } from 'lucide-react';
 import { z } from 'zod';
 import AdminBar from '../../components/AdminBar';
 import LoadingSpinner from '../../components/LoadingSpinner';

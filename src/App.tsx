@@ -16,19 +16,20 @@ const AdminUnits = lazy(() => import('./pages/[admin]/Units'));
 
 // Servers
 const ServerConsole = lazy(() => import('./pages/[server]/Console'));
+const ServerFiles = lazy(() => import('./pages/[server]/Files'))
 
 function App() {
   const location = useLocation();
-  
+
   const noSidebarRoutes = ['/login', '/register', '/404'];
   const shouldHaveSidebar = !noSidebarRoutes.includes(location.pathname);
 
   const pageVariants = {
-    initial: { 
+    initial: {
       opacity: 0,
       scale: 0.98
     },
-    animate: { 
+    animate: {
       opacity: 1,
       scale: 1,
       transition: {
@@ -37,7 +38,7 @@ function App() {
         damping: 20
       }
     },
-    exit: { 
+    exit: {
       opacity: 0,
       scale: 0.96,
       transition: {
@@ -50,7 +51,7 @@ function App() {
     <AuthProvider>
       <div className="bg-gray-50">
         {shouldHaveSidebar &&
-        <Navbar />
+          <Navbar />
         }
         <div className={`
           ${shouldHaveSidebar ? 'pl-56' : ''} 
@@ -93,13 +94,21 @@ function App() {
                   <Route path="/admin/units" element={<AdminUnits />} />
 
                   <Route
-  path="/servers/:id/console"
-  element={
-    <ProtectedRoute>
-      <ServerConsole />
-    </ProtectedRoute>
-  }
-/>
+                    path="/servers/:id/console"
+                    element={
+                      <ProtectedRoute>
+                        <ServerConsole />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/servers/:id/files"
+                    element={
+                      <ProtectedRoute>
+                        <ServerFiles />
+                      </ProtectedRoute>
+                    }
+                  />
                 </Routes>
               </motion.div>
             </AnimatePresence>

@@ -1,6 +1,6 @@
 import { useAuth } from './[auth]/Auth';
 import { Link } from 'react-router-dom';
-import { ChevronRightIcon, ServerIcon } from '@heroicons/react/24/outline';
+import { ChevronRightIcon, ServerIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -169,6 +169,29 @@ export default function Home() {
                 <p className="text-xs text-gray-500">No servers found</p>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Warning Banner */}
+        <div className="bg-amber-50 border border-amber-200 rounded-md p-4">
+          <div className="flex flex-col space-y-1">
+            <div className="flex items-center space-x-2">
+              <ExclamationTriangleIcon className="h-4 w-4 text-amber-700" strokeWidth="2" />
+              <p className="text-amber-700 text-sm font-medium">
+                This is a pre-release version of the Argon Panel
+              </p>
+            </div>
+            <p className="text-amber-700/70 text-xs">
+              Please report any bugs or issues on our{' '}
+              <a 
+                href="https://github.com/ArgonFOSS" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-amber-700/80 hover:text-amber-800"
+              >
+                GitHub
+              </a>
+            </p>
           </div>
         </div>
       </div>

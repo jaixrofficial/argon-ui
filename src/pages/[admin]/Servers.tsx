@@ -72,6 +72,7 @@ interface Server {
   node?: Node;
   unit?: Unit;
   user?: User;
+  status?: any;
 }
 
 interface FormData {
@@ -649,7 +650,7 @@ const AdminServersPage = () => {
                         <div className="flex-shrink-0">
                           <div 
                             className={`h-2 w-2 rounded-full ${
-                              server.state === 'running' ? 'bg-green-400' : 'bg-gray-300'
+                              server?.status?.status?.state === 'running' ? 'bg-green-400' : 'bg-gray-300'
                             }`}
                           />
                         </div>

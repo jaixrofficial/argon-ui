@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@monaco-editor/react": "^4.6.0",
     "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^22.10.10",
     "ansi-to-html": "^0.7.2",

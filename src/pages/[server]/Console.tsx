@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   SendIcon, Play, Square, RefreshCw,
-  ChevronRight, AlertCircle, Globe, Clock, Hash, Terminal
+  ChevronRight, AlertCircle, Globe, Hash, Terminal
 } from 'lucide-react';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import AnsiParser from '../../components/AnsiParser';
@@ -469,7 +469,7 @@ const ServerConsolePage = () => {
     <button
       type="submit"
       disabled={!connected || !isServerActive}
-      className="flex items-center px-3 py-2 cursor-pointer border border-white/5 transition text-xs font-medium text-gray-300 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+      className="flex items-center px-3 py-2 cursor-pointer border border-white/5 text-xs font-medium text-gray-300 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
     >
       <SendIcon className="w-3.5 h-3.5 mr-1.5" />
       Send
