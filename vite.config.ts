@@ -9,13 +9,14 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    host: true, // Allow any host
     proxy: {
       '/api': {
         target: process.env.API_URL || 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
-      }
-    }
+      },
+    },
   },
   build: {
     rollupOptions: {
