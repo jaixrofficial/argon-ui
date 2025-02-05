@@ -120,7 +120,7 @@ const Toast: React.FC<{ toast: Toast }> = ({ toast }) => (
     animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: -20 }}
     className={`fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 
-      ${toast.type === 'success' ? 'bg-gray-900 text-white' : 'bg-red-500 text-white'}`}
+      ${toast.type === 'success' ? 'bg-gray-900 dark:bg-gray-800 text-white' : 'bg-red-500 text-white'}`}
   >
     {toast.type === 'success' ? (
       <Check className="w-4 h-4" />
@@ -196,18 +196,17 @@ const ContextMenu: React.FC<{
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.1 }}
-      className="fixed z-50 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1"
-      style={{
-        top: position.y,
-        left: position.x,
-      }}
+      className="fixed z-50 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1"
+      style={{ top: position.y, left: position.x }}
     >
       {actions.map(({ label, icon: Icon, action, destructive }) => (
         <button
           key={action}
           onClick={() => onAction(action)}
-          className={`w-full px-3 py-2 text-left flex items-center space-x-2 text-sm hover:bg-gray-50
-            ${destructive ? 'text-red-600 hover:bg-red-50' : 'text-gray-700'}`}
+          className={`w-full px-3 py-2 text-left flex items-center space-x-2 text-sm 
+            ${destructive 
+              ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20' 
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50'}`}
         >
           <Icon className="w-4 h-4" />
           <span>{label}</span>
@@ -640,384 +639,377 @@ const sortedFiles = useMemo(() => {
 }, [files, search]);
 
 return (
-    <div 
-      className="min-h-screen px-8 py-8"
-      onDragEnter={handleDrag}
-      onDragLeave={handleDrag}
-      onDragOver={handleDrag}
-      onDrop={handleDrop}
-    >
-      {/* Toast Messages */}
-      <AnimatePresence>
-        {toasts.map(toast => (
-          <Toast key={toast.id} toast={toast} />
-        ))}
-      </AnimatePresence>
+  <div 
+    className="min-h-screen px-8 py-8 bg-gray-50 dark:bg-gray-900"
+    onDragEnter={handleDrag}
+    onDragLeave={handleDrag}
+    onDragOver={handleDrag}
+    onDrop={handleDrop}
+  >
+    {/* Toast Messages */}
+    <AnimatePresence>
+      {toasts.map(toast => (
+        <Toast key={toast.id} toast={toast} />
+      ))}
+    </AnimatePresence>
 
-      {/* Drop Zone Overlay */}
-      <AnimatePresence>
-        {dropZoneActive && (
+    {/* Drop Zone Overlay */}
+    <AnimatePresence>
+      {dropZoneActive && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-gray-900/50 dark:bg-gray-900/70 flex items-center justify-center z-50"
+        >
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center"
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-xl p-8 text-center"
+            <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">Drop files to upload</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Files will be uploaded to current directory</p>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    <div className="max-w-[1500px] mx-auto space-y-6">
+      {/* Header Section */}
+      <div className="space-y-3">
+        {/* Breadcrumb */}
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+          <button
+            onClick={() => navigate('/servers')}
+            className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-100"
+          >
+            Servers
+          </button>
+          <ChevronRight className="w-4 h-4 mx-1" />
+          <button
+            onClick={() => navigate(`/servers/${id}`)}
+            className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-100"
+          >
+            {server?.name}
+          </button>
+          <ChevronRight className="w-4 h-4 mx-1" />
+          <span className="text-gray-900 dark:text-gray-100 font-medium">Files</span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">File Manager</h1>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center px-3 py-1.5 text-xs text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-md"
             >
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">Drop files to upload</h3>
-              <p className="text-sm text-gray-500 mt-1">Files will be uploaded to current directory</p>
+              <AlertCircle className="w-3.5 h-3.5 mr-1.5" />
+              {error}
             </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* Path Navigation & Actions */}
+      <div className="flex items-center justify-between">
+        {/* Path */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setCurrentPath(prev => prev.slice(0, -1))}
+            disabled={currentPath.length === 0}
+            className={`p-2 text-gray-500 dark:text-gray-400 transition-colors duration-100
+              ${currentPath.length === 0 
+                ? 'opacity-50 cursor-not-allowed' 
+                : 'hover:text-gray-900 dark:hover:text-gray-200'}`}
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => setCurrentPath([])}
+            className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
+          >
+            home
+          </button>
+
+          {currentPath.map((segment, index) => (
+            <React.Fragment key={index}>
+              <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+              <button
+                onClick={() => setCurrentPath(prev => prev.slice(0, index + 1))}
+                className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                {segment}
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center space-x-2">
+          {/* Search */}
+          <div className="relative">
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-32 px-3 py-1 pl-9 text-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-md text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700"
+            />
+            <Search className="w-4 h-4 text-gray-400 dark:text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          </div>
+
+          {/* New File */}
+          <button
+            onClick={() => setModal({ type: 'new-file' })}
+            className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50"
+          >
+            <FilePlus className="w-4 h-4 mr-1.5" />
+            New File
+          </button>
+
+          {/* New Folder */}
+          <button
+            onClick={() => setModal({ type: 'new-folder' })}
+            className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50"
+          >
+            <FolderPlus className="w-4 h-4 mr-1.5" />
+            New Folder
+          </button>
+
+          {/* Upload */}
+          <label className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer">
+            <Upload className="w-4 h-4 mr-1.5" />
+            Upload
+            <input
+              ref={uploadInputRef}
+              type="file"
+              multiple
+              onChange={e => {
+                if (e.target.files?.length) {
+                  handleUpload(e.target.files);
+                  e.target.value = '';
+                }
+              }}
+              className="hidden"
+            />
+          </label>
+
+          {/* Selection Actions */}
+          {selectedFiles.size > 0 && (
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setModal({ type: 'compress' })}
+                className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700/50"
+              >
+                <Archive className="w-4 h-4 mr-1.5" />
+                Compress ({selectedFiles.size})
+              </button>
+              <button
+                onClick={handleMassDelete}
+                className="flex items-center px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800/50 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20"
+              >
+                <Trash2 className="w-4 h-4 mr-1.5" />
+                Delete ({selectedFiles.size})
+              </button>
+            </div>
+          )}
+
+          {/* Refresh */}
+          <button
+            onClick={fetchFiles}
+            disabled={loading}
+            className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Upload Progress */}
+      <AnimatePresence>
+        {uploads.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-2"
+          >
+            {uploads.map((upload, index) => (
+              <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md">
+                <div className="flex items-center space-x-3">
+                  <File className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                  <span className="text-sm text-gray-700 dark:text-gray-200">{upload.file.name}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  {upload.error ? (
+                    <span className="text-xs text-red-600 dark:text-red-400">{upload.error}</span>
+                  ) : upload.status === 'complete' ? (
+                    <motion.div
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                    >
+                      <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
+                    </motion.div>
+                  ) : (
+                    <div className="w-32 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <motion.div 
+                        className="h-full bg-gray-900 dark:bg-gray-100"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${upload.progress}%` }}
+                        transition={{ duration: 0.1 }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-[1500px] mx-auto space-y-6">
-        {/* Header */}
-        <div className="space-y-3">
-          <div className="flex items-center text-sm text-gray-600">
-            <button
-              onClick={() => navigate('/servers')}
-              className="hover:text-gray-900 transition-colors duration-100"
-            >
-              Servers
-            </button>
-            <ChevronRight className="w-4 h-4 mx-1" />
-            <button
-              onClick={() => navigate(`/servers/${id}`)}
-              className="hover:text-gray-900 transition-colors duration-100"
-            >
-              {server?.name}
-            </button>
-            <ChevronRight className="w-4 h-4 mx-1" />
-            <span className="text-gray-900 font-medium">Files</span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-gray-900">File Manager</h1>
-            {error && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center px-3 py-1.5 text-xs text-red-700 bg-red-50 border border-red-100 rounded-md"
-              >
-                <AlertCircle className="w-3.5 h-3.5 mr-1.5" />
-                {error}
-              </motion.div>
-            )}
-          </div>
+      {/* File List */}
+      {loading ? (
+        <div className="flex items-center justify-center h-[400px]">
+          <LoadingSpinner />
         </div>
-
-        {/* Path Navigation & Actions */}
-        <div className="flex items-center justify-between">
-          {/* Path */}
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setCurrentPath(prev => prev.slice(0, -1))}
-              disabled={currentPath.length === 0}
-              className={`p-2 text-gray-500 transition-colors duration-100
-                ${currentPath.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-900'}`}
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={() => setCurrentPath([])}
-              className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md 
-                hover:bg-gray-200 transition-colors duration-100"
-            >
-              home
-            </button>
-
-            {currentPath.map((segment, index) => (
-              <React.Fragment key={index}>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
-                <button
-                  onClick={() => setCurrentPath(prev => prev.slice(0, index + 1))}
-                  className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md 
-                    hover:bg-gray-200 transition-colors duration-100"
-                >
-                  {segment}
-                </button>
-              </React.Fragment>
-            ))}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center space-x-2">
-            {/* Search */}
-            <div className="relative">
-              <input
-                type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Search..."
-                className="w-32 px-3 py-1 pl-9 text-sm border border-gray-200 rounded-md 
-                  focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all duration-100"
-              />
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-            </div>
-
-            {/* New File */}
-            <button
-              onClick={() => setModal({ type: 'new-file' })}
-              className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-white 
-                border border-gray-200 rounded-md hover:bg-gray-50 transition-colors duration-100"
-            >
-              <FilePlus className="w-4 h-4 mr-1.5" />
-              New File
-            </button>
-
-            {/* New Folder */}
-            <button
-              onClick={() => setModal({ type: 'new-folder' })}
-              className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-white 
-                border border-gray-200 rounded-md hover:bg-gray-50 transition-colors duration-100"
-            >
-              <FolderPlus className="w-4 h-4 mr-1.5" />
-              New Folder
-            </button>
-
-            {/* Upload */}
-            <label className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-white 
-              border border-gray-200 rounded-md hover:bg-gray-50 transition-colors duration-100 cursor-pointer"
-            >
-              <Upload className="w-4 h-4 mr-1.5" />
-              Upload
-              <input
-                ref={uploadInputRef}
-                type="file"
-                multiple
-                onChange={e => {
-                  if (e.target.files?.length) {
-                    handleUpload(e.target.files);
-                    e.target.value = '';
-                  }
-                }}
-                className="hidden"
-              />
-            </label>
-
-      {/* Selection Actions */}
-      {selectedFiles.size > 0 && (
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setModal({ type: 'compress' })}
-            className="flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-white 
-              border border-gray-200 rounded-md hover:bg-gray-50 transition-colors duration-100"
-          >
-            <Archive className="w-4 h-4 mr-1.5" />
-            Compress ({selectedFiles.size})
-          </button>
-          <button
-            onClick={handleMassDelete}
-            className="flex items-center px-3 py-1.5 text-xs font-medium text-red-600 bg-white 
-              border border-red-200 rounded-md hover:bg-red-50 transition-colors duration-100"
-          >
-            <Trash2 className="w-4 h-4 mr-1.5" />
-            Delete ({selectedFiles.size})
-          </button>
-        </div>
-      )}
-
-            {/* Refresh */}
-            <button
-              onClick={fetchFiles}
-              disabled={loading}
-              className="p-2 text-gray-500 hover:text-gray-900 transition-colors duration-100 
-                disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-        </div>
-
-        {/* Upload Progress */}
-        <AnimatePresence>
-          {uploads.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-2"
-            >
-              {uploads.map((upload, index) => (
-                <div key={index} className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-md">
-                  <div className="flex items-center space-x-3">
-                    <File className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-700">{upload.file.name}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {upload.error ? (
-                      <span className="text-xs text-red-600">{upload.error}</span>
-                    ) : upload.status === 'complete' ? (
-                      <motion.div
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                      >
-                        <Check className="w-4 h-4 text-green-500" />
-                      </motion.div>
-                    ) : (
-                      <div className="w-32 h-1 bg-gray-200 rounded-full overflow-hidden">
-                        <motion.div 
-                          className="h-full bg-gray-900"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${upload.progress}%` }}
-                          transition={{ duration: 0.1 }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* File List */}
-        {loading ? (
-          <div className="flex items-center justify-center h-[400px]">
-            <LoadingSpinner />
-          </div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="border border-gray-200/50 rounded-xl overflow-hidden"
-          >
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50/50">
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="border border-gray-200/50 dark:border-gray-700/50 rounded-xl overflow-hidden"
+        >
+          <table className="w-full">
+            <thead>
+              <tr className="bg-gray-50/50 dark:bg-gray-800/50">
                 <th className="w-12 px-4 py-3 text-left">
-  <input
-    type="checkbox"
-    checked={selectedFiles.size === sortedFiles.length && sortedFiles.length > 0}
-    onChange={e => {
-      if (e.target.checked) {
-        setSelectedFiles(new Set(sortedFiles.map(f => f.name)));
-      } else {
-        setSelectedFiles(new Set());
-      }
-    }}
-    className="h-4 w-4 rounded border-gray-300 text-[#8146ab] focus:ring-[#8146ab] focus:ring-2 focus:ring-offset-2 
-      transition-colors duration-200 ease-in-out cursor-pointer hover:border-[#8146ab]"
-  />
-</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Size
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Modified
-                  </th>
-                  <th className="w-12"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200/50">
+                  <input
+                    type="checkbox"
+                    checked={selectedFiles.size === sortedFiles.length && sortedFiles.length > 0}
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelectedFiles(new Set(sortedFiles.map(f => f.name)));
+                      } else {
+                        setSelectedFiles(new Set());
+                      }
+                    }}
+                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-[#8146ab] focus:ring-[#8146ab] dark:focus:ring-[#8146ab]"
+                  />
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Size</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Modified</th>
+                <th className="w-12"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200/50 dark:divide-gray-700/50">
               {sortedFiles.map(file => {
-  const fileType = getFileTypeInfo(file.mime);
-  const FileIcon = file.isFile ? fileType.icon : Folder;
+                const fileType = getFileTypeInfo(file.mime);
+                const FileIcon = file.isFile ? fileType.icon : Folder;
 
-  return (
-    <motion.tr
-      key={file.name}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className={`${fileType.canEdit || !file.isFile ? 'cursor-pointer' : ''} hover:bg-gray-50 
-        transition-colors duration-100`}
-      onClick={() => {
-        if (fileType.canEdit && file.isFile) {
-          handleFileAction('edit', file);
-        } else if (!file.isFile) {
-          setCurrentPath([...currentPath, file.name]);
-        }
-      }}
-    >
-      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-        <input
-          type="checkbox"
-          checked={selectedFiles.has(file.name)}
-          onChange={() => {
-            const newSelected = new Set(selectedFiles);
-            if (newSelected.has(file.name)) {
-              newSelected.delete(file.name);
-            } else {
-              newSelected.add(file.name);
-            }
-            setSelectedFiles(newSelected);
-          }}
-          className="h-4 w-4 rounded border-gray-300 text-[#8146ab] focus:ring-[#8146ab] focus:ring-2 focus:ring-offset-2 
-            transition-colors duration-200 ease-in-out cursor-pointer hover:border-[#8146ab]"
-        />
-      </td>
-      <td className="px-4 py-3">
-        <div className="flex items-center space-x-3">
-          <FileIcon 
-            className={`w-4 h-4 ${
-              !file.isFile 
-                ? 'text-[#8146ab]'  // Folder icon color - Argon Purple
-                : file.mime.startsWith('image/') 
-                ? 'text-amber-600'  // Image files
-                : file.mime.startsWith('text/') || file.mime.includes('javascript') || file.mime.includes('json')
-                ? 'text-blue-600'  // Text/code files
-                : file.mime.includes('pdf')
-                ? 'text-red-600'  // PDF files
-                : file.mime.startsWith('audio/')
-                ? 'text-yellow-600'  // Audio files
-                : file.mime.startsWith('video/')
-                ? 'text-pink-600'  // Video files
-                : file.mime.includes('zip') || file.mime.includes('tar') || file.mime.includes('compress')
-                ? 'text-orange-600'  // Archive files
-                : 'text-gray-600'  // Default
-            }`}
-          />
-          <span className="text-sm text-gray-900">{file.name}</span>
-        </div>
-      </td>
-                    </motion.tr>
-                  );
-                })}
-
-                {sortedFiles.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-8 text-center">
-                      <div className="flex flex-col items-center justify-center text-gray-500">
-                        <Folder className="w-8 h-8 mb-2 text-gray-400" />
-                        <p className="text-sm">
-                          {search ? (
-                            <>No files matching "<span className="font-medium">{search}</span>"</>
-                          ) : (
-                            'This folder is empty'
-                          )}
-                        </p>
+                return (
+                  <motion.tr
+                    key={file.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className={`${fileType.canEdit || !file.isFile ? 'cursor-pointer' : ''} 
+                    hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-100`}
+                    onClick={() => {
+                      if (fileType.canEdit && file.isFile) {
+                        handleFileAction('edit', file);
+                      } else if (!file.isFile) {
+                        setCurrentPath([...currentPath, file.name]);
+                      }
+                    }}
+                  >
+                    <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={selectedFiles.has(file.name)}
+                        onChange={() => {
+                          const newSelected = new Set(selectedFiles);
+                          if (newSelected.has(file.name)) {
+                            newSelected.delete(file.name);
+                          } else {
+                            newSelected.add(file.name);
+                          }
+                          setSelectedFiles(newSelected);
+                        }}
+                        className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-[#8146ab] focus:ring-[#8146ab] dark:focus:ring-[#8146ab]"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center space-x-3">
+                        <FileIcon 
+                          className={`w-4 h-4 ${
+                            !file.isFile 
+                              ? 'text-[#8146ab] dark:text-[#9e6bc4]'  // Folder icon color - Argon Purple
+                              : file.mime.startsWith('image/') 
+                              ? 'text-amber-600 dark:text-amber-500'  // Image files
+                              : file.mime.startsWith('text/') || file.mime.includes('javascript') || file.mime.includes('json')
+                              ? 'text-blue-600 dark:text-blue-500'  // Text/code files
+                              : file.mime.includes('pdf')
+                              ? 'text-red-600 dark:text-red-500'  // PDF files
+                              : file.mime.startsWith('audio/')
+                              ? 'text-yellow-600 dark:text-yellow-500'  // Audio files
+                              : file.mime.startsWith('video/')
+                              ? 'text-pink-600 dark:text-pink-500'  // Video files
+                              : file.mime.includes('zip') || file.mime.includes('tar') || file.mime.includes('compress')
+                              ? 'text-orange-600 dark:text-orange-500'  // Archive files
+                              : 'text-gray-600 dark:text-gray-400'  // Default
+                          }`}
+                        />
+                        <span className="text-sm text-gray-900 dark:text-gray-100">{file.name}</span>
                       </div>
                     </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      {formatBytes(file.size)}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                      {formatDate(file.modifiedAt)}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setContextMenu({
+                            file,
+                            position: { x: e.clientX, y: e.clientY }
+                          });
+                        }}
+                        className="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </motion.tr>
+                );
+              })}
+
+              {sortedFiles.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center">
+                    <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+                      <Folder className="w-8 h-8 mb-2 text-gray-400 dark:text-gray-500" />
+                      <p className="text-sm">
+                        {search ? (
+                          <>No files matching "<span className="font-medium">{search}</span>"</>
+                        ) : (
+                          'This folder is empty'
+                        )}
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </motion.div>
       )}
-
-      {/* Context Menu */}
-      <AnimatePresence>
-        {contextMenu && (
-          <ContextMenu 
-            file={contextMenu.file}
-            position={contextMenu.position}
-            onClose={() => setContextMenu(null)}
-            onAction={action => handleFileAction(action, contextMenu.file)}
-          />
-        )}
-      </AnimatePresence>
 
       {/* Modals */}
       <AnimatePresence>
@@ -1026,103 +1018,27 @@ return (
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-gray-900/50 dark:bg-gray-900/70 flex items-center justify-center z-50"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.1 }}
-              className={`bg-white rounded-xl shadow-xl ${
+              className={`bg-white dark:bg-gray-800 rounded-xl shadow-xl ${
                 modal.type === 'file-editor' ? 'w-[900px] h-[600px]' : 'w-[400px]'
               }`}
             >
-              {/* New File Modal */}
-              {modal.type === 'new-file' && (
-                <div className="p-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Create New File</h3>
-                  <form onSubmit={async (e) => {
-                    e.preventDefault();
-                    const formData = new FormData(e.currentTarget);
-                    await handleCreateFile(formData.get('name') as string);
-                  }}>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="File name"
-                      autoFocus
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                    <div className="flex justify-end space-x-2 mt-4">
-                      <button
-                        type="button"
-                        onClick={() => setModal(null)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 
-                          transition-colors duration-100"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md 
-                          hover:bg-gray-800 transition-colors duration-100"
-                      >
-                        Create
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              {/* New Folder Modal */}
-              {modal.type === 'new-folder' && (
-                <div className="p-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Folder</h3>
-                  <form onSubmit={async (e) => {
-                    e.preventDefault();
-                    const formData = new FormData(e.currentTarget);
-                    await handleCreateFolder(formData.get('name') as string);
-                  }}>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Folder name"
-                      autoFocus
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                    <div className="flex justify-end space-x-2 mt-4">
-                      <button
-                        type="button"
-                        onClick={() => setModal(null)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 
-                          transition-colors duration-100"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md 
-                          hover:bg-gray-800 transition-colors duration-100"
-                      >
-                        Create
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
               {/* File Editor Modal */}
               {modal.type === 'file-editor' && (
                 <div className="flex flex-col h-full">
-                  <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900">
+                  <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
                       {modal.data.file.name}
                     </h3>
                     <button
                       onClick={() => setModal(null)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors duration-100"
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                     >
                       <X className="w-5 h-5" />
                     </button>
@@ -1148,11 +1064,10 @@ return (
                       }}
                     />
                   </div>
-                  <div className="flex justify-end space-x-2 p-4 border-t border-gray-200">
+                  <div className="flex justify-end space-x-2 p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                       onClick={() => setModal(null)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 
-                        transition-colors duration-100"
+                      className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-100"
                     >
                       Cancel
                     </button>
@@ -1163,66 +1078,161 @@ return (
                         }
                       }}
                       disabled={fileActions[modal.data.file.name]?.loading}
-                      className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md 
-                        hover:bg-gray-800 transition-colors duration-100 flex items-center
-                        disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 rounded-md 
+                               hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors duration-100 flex items-center 
+                               disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {fileActions[modal.data.file.name]?.loading ? (
-                        <>
-                          Saving...
-                        </>
-                      ) : (
-                        'Save'
-                      )}
+                      {fileActions[modal.data.file.name]?.loading ? 'Saving...' : 'Save'}
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* Compress Modal */}
-              {modal.type === 'compress' && (
-                <div className="p-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Create Archive</h3>
-                  <form onSubmit={async (e) => {
-                    e.preventDefault();
-                    const formData = new FormData(e.currentTarget);
-                    await handleCompress(formData.get('name') as string);
-                  }}>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Archive name (without .zip)"
-                      autoFocus
-                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md 
-                        focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    />
-                    <div className="flex justify-end space-x-2 mt-4">
-                      <button
-                        type="button"
-                        onClick={() => setModal(null)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 
-                          transition-colors duration-100"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md 
-                          hover:bg-gray-800 transition-colors duration-100"
-                      >
-                        Create Archive
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
+{/* New File Modal */}
+{modal.type === 'new-file' && (
+  <div className="p-6">
+    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Create New File</h3>
+    <form onSubmit={async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      await handleCreateFile(formData.get('name') as string);
+    }}>
+      <input
+        type="text"
+        name="name"
+        placeholder="File name"
+        autoFocus
+        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 
+                 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700
+                 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+      />
+      <div className="flex justify-end space-x-2 mt-4">
+        <button
+          type="button"
+          onClick={() => setModal(null)}
+          className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 
+                   hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-100"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 
+                   rounded-md hover:bg-gray-800 dark:hover:bg-gray-600 
+                   transition-colors duration-100"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+)}
+
+{/* New Folder Modal */}
+{modal.type === 'new-folder' && (
+  <div className="p-6">
+    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Create New Folder</h3>
+    <form onSubmit={async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      await handleCreateFolder(formData.get('name') as string);
+    }}>
+      <input
+        type="text"
+        name="name"
+        placeholder="Folder name"
+        autoFocus
+        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 
+                 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700
+                 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+      />
+      <div className="flex justify-end space-x-2 mt-4">
+        <button
+          type="button"
+          onClick={() => setModal(null)}
+          className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 
+                   hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-100"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 
+                   rounded-md hover:bg-gray-800 dark:hover:bg-gray-600 
+                   transition-colors duration-100"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+)}
+
+{/* Compress Modal */}
+{modal.type === 'compress' && (
+  <div className="p-6">
+    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Create Archive</h3>
+    <form onSubmit={async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.currentTarget);
+      await handleCompress(formData.get('name') as string);
+    }}>
+      <input
+        type="text"
+        name="name"
+        placeholder="Archive name (without .zip)"
+        autoFocus
+        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 
+                 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700
+                 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+      />
+      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        Selected items: {Array.from(selectedFiles).join(', ')}
+      </div>
+      <div className="flex justify-end space-x-2 mt-4">
+        <button
+          type="button"
+          onClick={() => setModal(null)}
+          className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 
+                   hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-100"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 
+                   rounded-md hover:bg-gray-800 dark:hover:bg-gray-600 
+                   transition-colors duration-100"
+        >
+          Create Archive
+        </button>
+      </div>
+    </form>
+  </div>
+)}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Context Menu - Already defined in the component above */}
+      <AnimatePresence>
+        {contextMenu && (
+          <ContextMenu 
+            file={contextMenu.file}
+            position={contextMenu.position}
+            onClose={() => setContextMenu(null)}
+            onAction={action => handleFileAction(action, contextMenu.file)}
+          />
+        )}
+      </AnimatePresence>
     </div>
-    </div>
-  );
+  </div>
+);
+
 };
 
 export default FileManager;

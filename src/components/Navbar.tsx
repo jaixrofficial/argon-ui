@@ -13,13 +13,14 @@ import {
   Cog6ToothIcon as CogSolid,
 } from '@heroicons/react/24/solid';
 import { useAuth } from '../pages/[auth]/Auth';
+import { ThemeToggle } from './ThemeToggle';
 
 const UserAvatar: React.FC<{ username: string }> = ({ username }) => {
   const initial = username.charAt(0).toUpperCase();
   
   return (
-    <div className="h-6 w-6 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center">
-      <span className="text-xs font-medium text-gray-600">{initial}</span>
+    <div className="h-6 w-6 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center">
+      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{initial}</span>
     </div>
   );
 };
@@ -67,13 +68,13 @@ export default function Sidebar() {
   return (
     <>
       <div 
-        className={`fixed inset-y-0 left-0 w-56 bg-gradient-to-b from-gray-100/50 to-gray-100 border-r border-gray-200 z-30 transform transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 w-56 bg-gradient-to-b from-gray-100/50 to-gray-100 dark:from-gray-800/50 dark:to-gray-800 
+                   border-r border-gray-200 dark:border-gray-700 z-30 transform transition-transform duration-300 ease-in-out`}
       >
         {/* Logo section */}
-        <div className="h-14 flex items-center justify-center px-4 border-b border-gray-200">
-          <span className="text-sm font-semibold text-gray-700">
-            {/* We would have text here. But let's put the Argon logo for now */}
-            <img src="https://i.imgur.com/GpRi4xT.png" alt="Argon Logo" className="h-5" />
+        <div className="h-14 flex items-center justify-center px-4 border-b border-gray-200 dark:border-gray-700">
+          <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+            <img src="https://i.imgur.com/GpRi4xT.png" alt="Argon Logo" className="h-5 grayscale dark:invert" />
           </span>
         </div>
 
@@ -83,14 +84,14 @@ export default function Sidebar() {
             to="/servers"
             className={`group flex items-center h-[32px] px-2 text-xs font-medium rounded-md transition-colors duration-200 ease-in-out border shadow-xs ${
               location.pathname === '/servers'
-                ? 'bg-white text-gray-700 border-gray-200'
-                : 'text-gray-600 hover:text-gray-700 hover:bg-gray-100 border-transparent shadow-transparent'
+                ? 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 border-transparent shadow-transparent'
             }`}
           >
             {location.pathname === '/servers' ? (
-              <ServerSolid className="mr-2 h-3.5 w-3.5 text-gray-500" />
+              <ServerSolid className="mr-2 h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
             ) : (
-              <ServerOutline className="mr-2 h-3.5 w-3.5 text-gray-400 transition group-hover:text-gray-500 stroke-[1.5]" />
+              <ServerOutline className="mr-2 h-3.5 w-3.5 text-gray-400 dark:text-gray-500 transition group-hover:text-gray-500 dark:group-hover:text-gray-400 stroke-[1.5]" />
             )}
             Servers
           </Link>
@@ -99,39 +100,40 @@ export default function Sidebar() {
             to="/admin"
             className={`group flex items-center h-[32px] px-2 text-xs font-medium rounded-md transition-colors duration-200 ease-in-out border shadow-xs ${
               location.pathname === '/admin'
-                ? 'bg-white text-gray-700 border-gray-200'
-                : 'text-gray-600 hover:text-gray-700 hover:bg-gray-100 border-transparent shadow-transparent'
+                ? 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 border-transparent shadow-transparent'
             }`}
           >
             {location.pathname === '/admin' ? (
-              <CogSolid className="mr-2 h-3.5 w-3.5 text-gray-500" />
+              <CogSolid className="mr-2 h-3.5 w-3.5 text-gray-500 dark:text-gray-400" />
             ) : (
-              <CogOutline className="mr-2 h-3.5 w-3.5 text-gray-400 transition group-hover:text-gray-500 stroke-[1.5]" />
+              <CogOutline className="mr-2 h-3.5 w-3.5 text-gray-400 dark:text-gray-500 transition group-hover:text-gray-500 dark:group-hover:text-gray-400 stroke-[1.5]" />
             )}
             Admin
           </Link>
 
           {isServerPage && (
             <div>
-              <div className="border-t mb-2 mt-4 border-gray-200" />
+              <div className="border-t mb-2 mt-4 border-gray-200 dark:border-gray-700" />
               <button
                 onClick={toggleServerCategory}
-                className="group flex items-center h-[32px] px-2 text-[10px] uppercase tracking-widest font-medium rounded-md transition-colors duration-200 ease-in-out border shadow-xs text-gray-600 hover:text-gray-700 hover:bg-gray-100 border-transparent shadow-transparent"
+                className="group flex items-center h-[32px] px-2 text-[10px] uppercase tracking-widest font-medium rounded-md transition-colors duration-200 ease-in-out border shadow-xs 
+                         text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 border-transparent shadow-transparent"
               >
                 {isServerCategoryOpen ? (
-                  <ChevronDownIcon className="mr-2 h-3.5 w-3.5 text-gray-400 transition group-hover:text-gray-500" />
+                  <ChevronDownIcon className="mr-2 h-3.5 w-3.5 text-gray-400 dark:text-gray-500 transition group-hover:text-gray-500 dark:group-hover:text-gray-400" />
                 ) : (
-                  <ChevronRightIcon className="mr-2 h-3.5 w-3.5 text-gray-400 transition group-hover:text-gray-500" />
+                  <ChevronRightIcon className="mr-2 h-3.5 w-3.5 text-gray-400 dark:text-gray-500 transition group-hover:text-gray-500 dark:group-hover:text-gray-400" />
                 )}
                 Server
               </button>
-              <div className={`pl-4 border-l-1 border-gray-200 transition-all duration-300 ease-in-out ${isServerCategoryOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'}`}>
+              <div className={`pl-4 border-l border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out ${isServerCategoryOpen ? 'max-h-screen' : 'max-h-0 overflow-hidden'}`}>
                 <Link
                   to={`${location.pathname.replace(/\/(console|files)$/, '')}/console`}
                   className={`group flex items-center h-[32px] px-2 text-xs font-medium rounded-md transition-colors duration-200 ease-in-out border shadow-xs ${
                     location.pathname.endsWith('/console')
-                      ? 'bg-white text-gray-700 border-gray-200'
-                      : 'text-gray-600 hover:text-gray-700 hover:bg-gray-100 border-transparent shadow-transparent'
+                      ? 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 border-transparent shadow-transparent'
                   }`}
                 >
                   Console
@@ -140,8 +142,8 @@ export default function Sidebar() {
                   to={`${location.pathname.replace(/\/(console|files)$/, '')}/files`}
                   className={`group flex items-center h-[32px] px-2 text-xs font-medium rounded-md transition-colors duration-200 ease-in-out border shadow-xs ${
                     location.pathname.endsWith('/files')
-                      ? 'bg-white text-gray-700 border-gray-200'
-                      : 'text-gray-600 hover:text-gray-700 hover:bg-gray-100 border-transparent shadow-transparent'
+                      ? 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700/50 border-transparent shadow-transparent'
                   }`}
                 >
                   Files
@@ -152,34 +154,36 @@ export default function Sidebar() {
         </nav>
 
         {/* User section with dropdown */}
-        <div className="absolute bottom-0 w-full border-t border-gray-200">
+        <div className="absolute bottom-0 w-full border-t border-gray-200 dark:border-gray-700">
           <div 
             ref={buttonRef}
-            className="relative px-3 py-3 flex items-center cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+            className="relative px-3 py-3 flex items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-200"
             onClick={toggleDropdown}
           >
             <UserAvatar username={user?.username || ''} />
             <div className="ml-2">
-              <p className="text-xs font-medium text-gray-700">{user?.username}</p>
+              <p className="text-xs font-medium text-gray-700 dark:text-gray-200">{user?.username}</p>
             </div>
 
             {/* Dropdown Menu */}
             <div 
               ref={dropdownRef}
-              className={`absolute bottom-full left-2 right-2 mb-1 bg-white rounded-md shadow-xs border border-gray-200 overflow-hidden transform transition-all duration-200 ease-in-out origin-bottom ${
+              className={`absolute bottom-full left-2 right-2 mb-1 bg-white dark:bg-gray-800 rounded-md shadow-xs border border-gray-200 dark:border-gray-700 
+                         overflow-hidden transform transition-all duration-200 ease-in-out origin-bottom ${
                 isDropdownOpen 
                   ? 'opacity-100 scale-y-100 translate-y-0' 
                   : 'opacity-0 scale-y-95 translate-y-1 pointer-events-none'
               }`}
             >
               <div className="py-1">
-                <button className="w-full px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50 flex items-center">
+                <ThemeToggle />
+                <button className="w-full px-3 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center">
                   <UserCircleIcon className="mr-2 h-3.5 w-3.5" />
                   Profile
                 </button>
                 <button 
                   onClick={handleLogout}
-                  className="w-full px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50 flex items-center"
+                  className="w-full px-3 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center"
                 >
                   <ArrowLeftOnRectangleIcon className="mr-2 h-3.5 w-3.5" />
                   Sign out

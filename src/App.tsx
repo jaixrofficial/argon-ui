@@ -4,6 +4,7 @@ import { Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import LoadingSpinner from './components/LoadingSpinner';
 import { AuthProvider, ProtectedRoute, AuthPage } from './pages/[auth]/Auth';
+import { ThemeProvider } from './components/ThemeProvider';
 
 const Servers = lazy(() => import('./pages/Servers'));
 const NotFound = lazy(() => import('./pages/NotFound'));
@@ -49,7 +50,8 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="bg-gray-50">
+      <ThemeProvider>
+      <div className="bg-gray-50 dark:bg-gray-900">
         {shouldHaveSidebar &&
           <Navbar />
         }
@@ -115,6 +117,7 @@ function App() {
           </Suspense>
         </div>
       </div>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

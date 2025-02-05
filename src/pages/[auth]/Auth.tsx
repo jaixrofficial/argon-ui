@@ -101,8 +101,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
     if (loading) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
         </div>
       );
     }
@@ -149,24 +149,24 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="mb-4">
-          <h2 className="text-xl font-semibold text-gray-700">
+          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
             {mode === 'login' ? 'Sign in to Argon' : 'Create your account'}
           </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           {error && (
-            <div className="px-2 py-1.5 rounded-md bg-red-50 border border-red-100">
-              <p className="text-xs text-red-600">{error}</p>
+            <div className="px-2 py-1.5 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800">
+              <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
             </div>
           )}
 
           <div className="space-y-3">
             <div>
-              <label htmlFor="username" className="block text-xs font-medium text-gray-600 mb-1.5">
+              <label htmlFor="username" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
                 Username
               </label>
               <input
@@ -174,15 +174,17 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="block w-full px-2 py-1.5 rounded-md bg-white border border-gray-200 text-xs text-gray-700
-                         focus:outline-none focus:ring-0 focus:border-gray-400 transition-colors duration-200"
+                className="block w-full px-2 py-1.5 rounded-md bg-white dark:bg-gray-800 border border-gray-200 
+                         dark:border-gray-700 text-xs text-gray-700 dark:text-gray-200
+                         focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-600 
+                         transition-colors duration-200"
                 placeholder="info@example.com"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-medium text-gray-600 mb-1.5">
+              <label htmlFor="password" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -191,15 +193,18 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full px-2 py-1.5 rounded-md bg-white border border-gray-200 text-xs text-gray-700
-                           focus:outline-none focus:ring-0 focus:border-gray-400 transition-colors duration-200"
+                  className="block w-full px-2 py-1.5 rounded-md bg-white dark:bg-gray-800 border border-gray-200 
+                           dark:border-gray-700 text-xs text-gray-700 dark:text-gray-200
+                           focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-600 
+                           transition-colors duration-200"
                   placeholder="*********"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 
+                           dark:text-gray-500 dark:hover:text-gray-300"
                 >
                   {showPassword ? (
                     <EyeOff className="w-3.5 h-3.5" />
@@ -214,12 +219,15 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-white text-xs font-medium text-gray-700 py-1.5 px-2 rounded-md border border-gray-200 
-                     hover:bg-gray-50 shadow-xs focus:outline-none focus:ring-0 focus:border-gray-400
+            className="w-full bg-white dark:bg-gray-800 text-xs font-medium text-gray-700 dark:text-gray-200 
+                     py-1.5 px-2 rounded-md border border-gray-200 dark:border-gray-700
+                     hover:bg-gray-50 dark:hover:bg-gray-700 shadow-xs 
+                     focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-600
                      transition-colors duration-200 flex items-center justify-center"
           >
             {isLoading ? (
-              <div className="w-3.5 h-3.5 border border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+              <div className="w-3.5 h-3.5 border border-gray-300 dark:border-gray-600 
+                           border-t-gray-600 dark:border-t-gray-300 rounded-full animate-spin" />
             ) : (
               mode === 'login' ? 'Sign in' : 'Create account'
             )}
@@ -227,18 +235,18 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
         </form>
 
         <div className="mt-4 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {mode === 'login' ? (
               <>
                 Don't have an account?{' '}
-                <Link to="/register" className="text-gray-700 hover:text-gray-900">
+                <Link to="/register" className="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">
                   Sign up
                 </Link>
               </>
             ) : (
               <>
                 Already have an account?{' '}
-                <Link to="/login" className="text-gray-700 hover:text-gray-900">
+                <Link to="/login" className="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">
                   Sign in
                 </Link>
               </>

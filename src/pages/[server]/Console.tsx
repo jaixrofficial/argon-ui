@@ -290,43 +290,42 @@ const ServerConsolePage = () => {
 
   const getStateColor = (state: string) => {
     switch (state?.toLowerCase()) {
-      case 'running': return 'text-green-500';
-      case 'stopped': return 'text-red-500';
-      case 'installing': return 'text-yellow-500';
-      default: return 'text-gray-500';
+      case 'running': return 'text-green-500 dark:text-green-400';
+      case 'stopped': return 'text-red-500 dark:text-red-400';
+      case 'installing': return 'text-yellow-500 dark:text-yellow-400';
+      default: return 'text-gray-500 dark:text-gray-400';
     }
   };
 
   if (loading) return <LoadingSpinner />;
 
   const isServerActive = server?.state?.toLowerCase() === 'running';
-  let allocation;
-
-  allocation = server?.status?.allocation ? JSON.parse(server.status.allocation) : null; // legacy
+  let allocation = server?.status?.allocation ? JSON.parse(server.status.allocation) : null;
 
   return (
-    <div className="min-h-screen px-8 py-8">
+    <div className="min-h-screen px-8 py-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-[1500px] mx-auto p-4 space-y-6">
         {/* Header Section */}
         <div className="space-y-3">
           {/* Breadcrumb */}
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <button
               onClick={() => navigate('/servers')}
-              className="hover:text-gray-900"
+              className="hover:text-gray-900 dark:hover:text-gray-200"
             >
               Servers
             </button>
             <ChevronRight className="w-4 h-4 mx-1" />
-            <span className="text-gray-900 font-medium">{server?.name}</span>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">{server?.name}</span>
           </div>
 
           {/* Title and Actions */}
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold text-gray-900">{server?.name}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{server?.name}</h1>
             <div className="flex items-center space-x-3">
               {error && (
-                <div className="flex items-center px-3 py-1.5 text-xs text-red-700 bg-red-50 border border-red-100 rounded-md">
+                <div className="flex items-center px-3 py-1.5 text-xs text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 
+                              border border-red-100 dark:border-red-800 rounded-md">
                   <AlertCircle className="w-3.5 h-3.5 mr-1.5" />
                   {error}
                 </div>
@@ -335,23 +334,29 @@ const ServerConsolePage = () => {
                 <button
                   onClick={() => handlePowerAction('start')}
                   disabled={powerLoading || isServerActive}
-                  className="flex items-center px-4 py-4 cursor-pointer text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                  className="flex items-center px-4 py-4 cursor-pointer text-xs font-medium text-gray-700 dark:text-gray-200 
+                           bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl 
+                           hover:bg-gray-50 dark:hover:bg-gray-700/50 disabled:opacity-50 transition-all duration-200"
                 >
-                  <Play className="w-4 h-4 text-gray-700" />
+                  <Play className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                 </button>
                 <button
                   onClick={() => handlePowerAction('restart')}
                   disabled={powerLoading || !isServerActive}
-                  className="flex items-center px-4 py-4 cursor-pointer text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                  className="flex items-center px-4 py-4 cursor-pointer text-xs font-medium text-gray-700 dark:text-gray-200 
+                           bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl 
+                           hover:bg-gray-50 dark:hover:bg-gray-700/50 disabled:opacity-50 transition-all duration-200"
                 >
-                  <RefreshCw className="w-4 h-4 text-gray-700" />
+                  <RefreshCw className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                 </button>
                 <button
                   onClick={() => handlePowerAction('stop')}
                   disabled={powerLoading || !isServerActive}
-                  className="flex items-center px-4 py-4 cursor-pointer text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-all duration-200"
+                  className="flex items-center px-4 py-4 cursor-pointer text-xs font-medium text-gray-700 dark:text-gray-200 
+                           bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl 
+                           hover:bg-gray-50 dark:hover:bg-gray-700/50 disabled:opacity-50 transition-all duration-200"
                 >
-                  <Square className="w-4 h-4 text-gray-700" />
+                  <Square className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                 </button>
               </div>
             </div>
@@ -359,80 +364,83 @@ const ServerConsolePage = () => {
 
           {/* Metadata */}
           <div className="flex items-center space-x-6 text-sm">
-            <div className="flex items-center text-gray-500">
+            <div className="flex items-center text-gray-500 dark:text-gray-400">
               <Hash className="w-4 h-4 mr-1.5" />
               <span>{server?.internalId.split('-', 1)}</span>
             </div>
-            <div className="flex items-center text-gray-500">
+            <div className="flex items-center text-gray-500 dark:text-gray-400">
               <Globe className="w-4 h-4 mr-1.5" />
               {/* @ts-ignore */}
               <span>{server?.allocation.alias ? server?.allocation.alias : server?.allocation.bindAddress}:{allocation?.port || 'unknown'}</span>
             </div>
             <div className={`flex items-center ${getStateColor(server?.state || '')}`}>
               <div className={`w-2 h-2 rounded-full mr-2 ${
-                server?.state?.toLowerCase() === 'running' ? 'bg-green-500' :
-                server?.state?.toLowerCase() === 'stopped' ? 'bg-red-500' :
-                server?.state?.toLowerCase() === 'installed' ? 'bg-gray-500' :
-                'bg-yellow-500'
+                server?.state?.toLowerCase() === 'running' ? 'bg-green-500 dark:bg-green-400' :
+                server?.state?.toLowerCase() === 'stopped' ? 'bg-red-500 dark:bg-red-400' :
+                server?.state?.toLowerCase() === 'installed' ? 'bg-gray-500 dark:bg-gray-400' :
+                'bg-yellow-500 dark:bg-yellow-400'
               }`} />
-              {/* @ts-ignore */}
-              <span>{(server?.state.charAt(0).toUpperCase() + server?.state.slice(1)).replace('Installed', 'Connecting...')}</span>
+              <span>
+                {/* @ts-ignore */}
+                {(server?.state.charAt(0).toUpperCase() + server?.state.slice(1)).replace('Installed', 'Connecting...')}
+              </span>
             </div>
           </div>
         </div>
 
-{/* Stats Row */}
-<div className="grid grid-cols-4 gap-6 border-t border-b border-gray-200/50 py-8">
-  <div className="border-r border-gray-200">
-    <p className="text-sm font-medium text-gray-500">CPU Usage</p>
-    <div className="flex items-baseline mt-1">
-      <p className="text-2xl font-semibold text-gray-900">
-        {isServerActive ? `${liveStats.cpuPercent.toFixed(1)}%` : '-'}
-      </p>
-    </div>
-  </div>
+        {/* Stats Row */}
+        <div className="grid grid-cols-4 gap-6 border-t border-b border-gray-200/50 dark:border-gray-700/50 py-8">
+          <div className="border-r border-gray-200 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">CPU Usage</p>
+            <div className="flex items-baseline mt-1">
+              <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {isServerActive ? `${liveStats.cpuPercent.toFixed(1)}%` : '-'}
+              </p>
+            </div>
+          </div>
 
-  <div className="border-r border-gray-200">
-    <p className="text-sm font-medium text-gray-500">Memory</p>
-    <div className="flex items-baseline mt-1">
-      <p className="text-2xl font-semibold text-gray-900">
-        {isServerActive ? formatBytes(liveStats.memory.used) : '-'}
-      </p>
-      {isServerActive && (
-        <span className="ml-2 text-sm font-medium text-gray-500">
-          / {formatBytes(server?.status.memory_limit)}
-        </span>
-      )}
-    </div>
-  </div>
+          <div className="border-r border-gray-200 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Memory</p>
+            <div className="flex items-baseline mt-1">
+              <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {isServerActive ? formatBytes(liveStats.memory.used) : '-'}
+              </p>
+              {isServerActive && (
+                <span className="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  / {formatBytes(server?.status.memory_limit)}
+                </span>
+              )}
+            </div>
+          </div>
 
-  <div className="border-r border-gray-200">
-    <p className="text-sm font-medium text-gray-500">Network I/O</p>
-    <div className="flex items-baseline mt-1">
-      <p className="text-2xl font-semibold text-gray-900">
-        {isServerActive ? formatBytes(liveStats.network.rxBytes) : '-'}
-      </p>
-      {isServerActive && (
-        <span className="ml-2 text-sm font-medium text-gray-500">
-          /s in
-        </span>
-      )}
-    </div>
-  </div>
+          <div className="border-r border-gray-200 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Network I/O</p>
+            <div className="flex items-baseline mt-1">
+              <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {isServerActive ? formatBytes(liveStats.network.rxBytes) : '-'}
+              </p>
+              {isServerActive && (
+                <span className="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  /s in
+                </span>
+              )}
+            </div>
+          </div>
 
-  <div>
-    <p className="text-sm font-medium text-gray-500">Disk Space</p>
-    <div className="flex items-baseline mt-1">
-      <p className="text-2xl font-semibold text-gray-900">
-        {formatBytes((server?.diskMiB || 0) * 1024 * 1024)}
-      </p>
-      <span className="ml-2 text-sm font-medium text-gray-500">total</span>
-    </div>
-  </div>
-</div>
+          <div>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Disk Space</p>
+            <div className="flex items-baseline mt-1">
+              <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                {formatBytes((server?.diskMiB || 0) * 1024 * 1024)}
+              </p>
+              <span className="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">total</span>
+            </div>
+          </div>
+        </div>
 
         {/* Console */}
-        <div className="border-2 border-gray-50 rounded-2xl ring-2 ring-gray-50 ring-offset-1 ring-offset-gray-300 bg-gray-900">
+        <div className="border-2 border-gray-50 dark:border-gray-900 rounded-2xl ring-2 ring-gray-50 dark:ring-gray-900 
+                      ring-offset-1 ring-offset-gray-300 dark:ring-offset-gray-800 bg-gray-900">
           <div 
             ref={consoleRef}
             style={{
@@ -446,7 +454,8 @@ const ServerConsolePage = () => {
               ))
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 mt-4">
-                <Terminal className="w-12 h-12 mb-2 ring-2 ring-gray-900 border-4 border-gray-900 ring-offset-1 ring-offset-gray-800 opacity-80 bg-gray-700/50 rounded-xl p-3" />
+                <Terminal className="w-12 h-12 mb-2 ring-2 ring-gray-900 border-4 border-gray-900 ring-offset-1 
+                                 ring-offset-gray-800 opacity-80 bg-gray-700/50 rounded-xl p-3" />
                 <p className="text-sm mt-4 text-gray-400/90 font-medium">No console output available</p>
                 <p className="text-xs mt-1">Perform an action to see some logs here!</p>
               </div>
@@ -454,28 +463,31 @@ const ServerConsolePage = () => {
           </div>
 
           <div className="bg-gray-800 p-2 m-2 rounded-b-xl rounded-t-md">
-          <form onSubmit={sendCommand} className="flex items-center space-x-3">
-  <input
-    type="text"
-    value={command}
-    onChange={(e) => setCommand(e.target.value)}
-    placeholder="$ server~"
-    className="flex-1 bg-gray-800 text-gray-100 rounded-md text-sm transition px-3 py-2 focus:outline-none focus:ring-1 focus:ring-transparent placeholder:text-gray-500"
-  />
-  <div className="flex items-center space-x-2">
-    <span className="text-xs hidden text-gray-500">
-      {checkWebSocketStatus()}
-    </span>
-    <button
-      type="submit"
-      disabled={!connected || !isServerActive}
-      className="flex items-center px-3 py-2 cursor-pointer border border-white/5 text-xs font-medium text-gray-300 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-    >
-      <SendIcon className="w-3.5 h-3.5 mr-1.5" />
-      Send
-    </button>
-  </div>
-</form>
+            <form onSubmit={sendCommand} className="flex items-center space-x-3">
+              <input
+                type="text"
+                value={command}
+                onChange={(e) => setCommand(e.target.value)}
+                placeholder="$ server~"
+                className="flex-1 bg-gray-800 text-gray-100 rounded-md text-sm transition px-3 py-2 
+                         focus:outline-none focus:ring-1 focus:ring-transparent placeholder:text-gray-500"
+              />
+              <div className="flex items-center space-x-2">
+                <span className="text-xs hidden text-gray-500">
+                  {checkWebSocketStatus()}
+                </span>
+                <button
+                  type="submit"
+                  disabled={!connected || !isServerActive}
+                  className="flex items-center px-3 py-2 cursor-pointer border border-white/5 text-xs font-medium 
+                           text-gray-300 bg-gray-800 rounded-md hover:bg-gray-700 disabled:opacity-50 
+                           disabled:cursor-not-allowed transition-colors duration-200"
+                >
+                  <SendIcon className="w-3.5 h-3.5 mr-1.5" />
+                  Send
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
